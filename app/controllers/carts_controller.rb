@@ -1,6 +1,6 @@
 class CartsController < ApplicationController
-  before_action :set_cart, only: %i[ show edit update destroy ]
-
+  before_action :set_cart, only: %i[ show edit update destroy increase_quantity decrease_quantity ]
+  rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
   # GET /carts or /carts.json
   def index
     @carts = Cart.all
@@ -9,6 +9,11 @@ class CartsController < ApplicationController
 
   # GET /carts/1 or /carts/1.json
   def show
+    if @cart.id == session[:cart_id]
+      @cart = Cart.find(session[:cart_id])
+    else
+      redirect_to store_index_url, notice: 'Invalid cart'
+    end 
   end
 
   # GET /carts/new
@@ -18,6 +23,30 @@ class CartsController < ApplicationController
 
   # GET /carts/1/edit
   def edit
+  end
+
+  # PATCH /carts/1/increase_quantity
+  def increase_quantity
+    @current_item = @cart.line_items.find(params[:line_item_id])
+    @current_item.increment!(:quantity)
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to cart_url(@cart) }
+    end
+  end
+
+   # PATCH /carts/1/decrease_quantity
+   def decrease_quantity
+    @current_item = @cart.line_items.find(params[:line_item_id])
+    if @current_item.quantity > 1
+      @current_item.decrement!(:quantity)
+    else
+      @current_item.destroy
+    end
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to cart_url(@cart) }
+    end
   end
 
   # POST /carts or /carts.json
@@ -50,12 +79,13 @@ class CartsController < ApplicationController
 
   # DELETE /carts/1 or /carts/1.json
   def destroy
-    @cart.destroy
-
-    respond_to do |format|
-      format.html { redirect_to carts_url, notice: "Cart was successfully destroyed." }
+    @cart.destroy if @cart.id == session[:cart_id] 
+      session[:cart_id] = nil
+      respond_to do |format|
+      format.html { redirect_to store_index_url,
+      notice: 'Your cart is currently empty' } 
       format.json { head :no_content }
-    end
+    end 
   end
 
   private
@@ -67,5 +97,10 @@ class CartsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def cart_params
       params.fetch(:cart, {})
+    end
+    
+    def invalid_cart
+      logger.error "Attempt to access invalid cart #{params[:id]}" 
+      redirect_to store_index_url, notice: 'Invalid cart'
     end
 end
