@@ -1,7 +1,8 @@
-<fieldset data-payment-target="additionalFields" data-type="Purchase order">
-<div class="my-5">
-
-<%= form.label :po_number %>
-<%= form.number_field :po_number, class: "input-field" %>
-</div>
+<!-- _po.html.erb -->
+<fieldset data-payment-target="additionalFields" data-id="<%= PaymentType.find_by(name: 'Purchase order').id %>" data-type="Purchase order">
+  <!-- Fields specific to purchase order payments -->
+  <div class="my-5">
+    <%= form.label :po_number %>
+    <%= form.number_field :po_number, class: "input-field" %>
+  </div>
 </fieldset>

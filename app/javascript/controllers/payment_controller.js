@@ -9,10 +9,23 @@ export default class extends Controller {
   }
 
   showAdditionalFields() {
-    let selection = this.selectionTarget.value;
+    // Get the selected payment type id
+    const selectedId = this.selectionTarget.value;
+    console.log("Selected payment type ID:", selectedId);
 
-    for (let fields of this.additionalFieldsTargets) {
-      fields.disabled = fields.hidden = fields.dataset.type != selection;
-    }
+    // Loop through each additional fieldset
+    this.additionalFieldsTargets.forEach((fieldset) => {
+      // Compare the id of the payment type with the data-type attribute of the fieldset
+      const paymentTypeId = fieldset.dataset.id;
+      console.log("Fieldset payment type ID:", paymentTypeId);
+
+      if (paymentTypeId == selectedId) {
+        fieldset.hidden = false;
+        fieldset.style.display = "block"; // Ensure fieldset is displayed
+      } else {
+        fieldset.hidden = true;
+        fieldset.style.display = "none"; // Ensure fieldset is hidden
+      }
+    });
   }
 }

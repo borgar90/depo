@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[ show edit update destroy ]
+  before_action :set_product, only: %i[ show edit update destroy who_bought ]
 
   # GET /products or /products.json
   def index
@@ -59,6 +59,17 @@ class ProductsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def who_bought
+    @product = Product.find(params[:id])
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @product.to_json(include: :orders), content_type: 'application/json' }
+      format.xml { render xml: @product.to_xml(include: :orders) }
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

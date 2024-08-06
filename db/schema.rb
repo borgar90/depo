@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_08_05_122242) do
+ActiveRecord::Schema[7.0].define(version: 2024_08_06_084838) do
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -35,6 +35,22 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_05_122242) do
     t.integer "pay_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "payment_type_id", null: false
+    t.index ["payment_type_id"], name: "index_orders_on_payment_type_id"
+  end
+
+  create_table "payment_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.references :payment_type, null: false, foreign_key: true
+    t.references :order, null: false, foreign_key: true
+    t.json "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "products", force: :cascade do |t|
@@ -49,4 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_05_122242) do
   add_foreign_key "line_items", "carts"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "products"
+  add_foreign_key "orders", "payment_types"
+  add_foreign_key "payments", "orders"
+  add_foreign_key "payments", "payment_types"
 end

@@ -1,9 +1,7 @@
 <%= form_with(model: order, class: "contents") do |form| %>
   <% if order.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2
-    font-medium rounded-lg mt-3">
-      <h2><%= pluralize(order.errors.count, "error") %>
-      prohibited this order from being saved:</h2>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
       <ul>
         <% order.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -28,23 +26,23 @@
   </div>
 
   <div data-controller="payment">
-<div class="my-5">
-<%= form.label :pay_type %>
-<%= form.select :pay_type, Order.pay_types.keys,
-{ prompt: 'Select a payment method' },
- 'data-payment-target' => 'selection',
- 'data-action' => 'payment#showAdditionalFields',
+    <div class="my-5">
+      <%= form.label :payment_type_id, 'Payment Method' %>
+      <%= form.collection_select :payment_type_id, PaymentType.all, :id, :name, 
+        { prompt: 'Select a payment method' },
+        'data-payment-target' => 'selection',
+        'data-action' => 'payment#showAdditionalFields',
+        class: "input-field" %>
+    </div>
 
-class: "input-field" %>
-
-</div>
-
- <%= render partial: 'check', locals: {form: form} %>
- <%= render partial: 'cc', locals: {form: form} %>
- <%= render partial: 'po', locals: {form: form} %>
- </div>
+    <%= render partial: 'check', locals: { form: form } %>
+    <%= render partial: 'cc', locals: { form: form } %>
+    <%= render partial: 'po', locals: { form: form } %>
+    <%= render partial: 'cash', locals: { form: form } %>
+    <%= render partial: 'coupon', locals: { form: form } %>
+  </div>
 
   <div class="inline">
-  <%= form.submit 'Place Order', class: "create_order" %>
+    <%= form.submit 'Place Order', class: "create_order" %>
   </div>
 <% end %>

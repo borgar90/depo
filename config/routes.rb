@@ -8,7 +8,11 @@ Rails.application.routes.draw do
     end
   end
   root 'store#index', as: 'store_index'
-  resources :products
+  resources :products do
+    member do
+      get :who_bought
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
