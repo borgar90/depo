@@ -1,15 +1,12 @@
-<% if line_item == @current_item %>
-<tr id="<%= dom_id(line_item) %>" class="line-item-highlight">
-<% else %>
-<tr id="<%= dom_id(line_item) %>">
-<% end %>
-<td class="text-right"><%= line_item.quantity %></td> <td>&times;</td>
-<td class="pr-2">
-<%= line_item.product.title %> </td>
-<td class="text-right font-bold">
-<%= number_to_currency(line_item.total_price) %>
-</td> 
-<td class="flex">
-  <%= button_to '+', increase_quantity_cart_path(cart, line_item_id: line_item.id), method: :patch, class: 'ml-4 rounded-lg py-1 px-2 text-white bg-green-600', form: { data: { turbo_stream: true } } %>
-  <%= button_to '-', decrease_quantity_cart_path(cart, line_item_id: line_item.id), method: :patch, class: 'ml-4 rounded-lg py-1 px-2 text-white bg-red-600', form: { data: { turbo_stream: true } } %>
-</td>
+<tr id="<%= dom_id(line_item) %>" class="<%= 'line-item-highlight' if line_item == current_item %>">
+  <td class="text-right"><%= line_item.quantity %></td>
+  <td>&times;</td>
+  <td class="pr-2"><%= line_item.product.title %></td>
+  <td class="text-right font-bold"><%= number_to_currency(line_item.total_price) %></td>
+  <% if defined?(show_buttons) && show_buttons %>
+    <td class="flex">
+      <%= button_to '+', increase_quantity_cart_path(cart, line_item_id: line_item.id), method: :patch, class: 'ml-4 rounded-lg py-1 px-2 text-white bg-green-600', form: { data: { turbo_stream: true } } %>
+      <%= button_to '-', decrease_quantity_cart_path(cart, line_item_id: line_item.id), method: :patch, class: 'ml-4 rounded-lg py-1 px-2 text-white bg-red-600', form: { data: { turbo_stream: true } } %>
+    </td>
+  <% end %>
+</tr>

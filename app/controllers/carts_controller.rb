@@ -1,4 +1,5 @@
 class CartsController < ApplicationController
+  include ActionView::RecordIdentifier
   before_action :set_cart, only: %i[ show edit update destroy increase_quantity decrease_quantity ]
   rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
   # GET /carts or /carts.json
@@ -29,25 +30,34 @@ class CartsController < ApplicationController
   def increase_quantity
     @current_item = @cart.line_items.find(params[:line_item_id])
     @current_item.increment!(:quantity)
+
+    Rails.logger.debug "Increased quantity of item #{@current_item.id} to #{@current_item.quantity}"
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream { render 'carts/increase_quantity', locals: { line_item: @current_item, cart: @cart, current_item: @current_item } }
       format.html { redirect_to cart_url(@cart) }
     end
   end
 
-   # PATCH /carts/1/decrease_quantity
-   def decrease_quantity
+  # PATCH /carts/1/decrease_quantity
+  def decrease_quantity
     @current_item = @cart.line_items.find(params[:line_item_id])
     if @current_item.quantity > 1
       @current_item.decrement!(:quantity)
     else
       @current_item.destroy
     end
+    Rails.logger.debug "Decreased quantity of item #{@current_item.id}. Remaining items: #{@current_item.quantity}"
+
     respond_to do |format|
-      format.turbo_stream
+      if @current_item.destroyed?
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@current_item)) }
+      else
+        format.turbo_stream { render 'carts/decrease_quantity', locals: { line_item: @current_item, cart: @cart, current_item: @current_item } }
+      end
       format.html { redirect_to cart_url(@cart) }
     end
   end
+
 
   # POST /carts or /carts.json
   def create

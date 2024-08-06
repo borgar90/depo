@@ -17,6 +17,8 @@ class OrdersController < ApplicationController
     @order = Order.new(order_params)
     @order.add_line_items_from_cart(@cart)
 
+    respond_to do |format|
+
     if @order.save
       payment_type = PaymentType.find_by(id: params[:order][:payment_type_id])
       @payment = Payment.new(
@@ -28,16 +30,24 @@ class OrdersController < ApplicationController
       if @payment.save
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
-        redirect_to store_index_url, notice: 'Thank you for your order.'
+        OrderMailer.received(@order).deliver_later
+        format.html { redirect_to store_index_url, notice:
+          'Thank you for your order.' }
+        format.json { render :show, status: :created,
+                             location: @order }
       else
         @order.destroy  # Clean up in case payment fails
-        render :new, status: :unprocessable_entity
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @order.errors,
+                             status: :unprocessable_entity }
       end
     else
-      render :new, status: :unprocessable_entity
+      format.html { render :new, status: :unprocessable_entity }
+      format.json { render json: @order.errors,
+                           status: :unprocessable_entity }
+    end
     end
   end
-  
 
 
 

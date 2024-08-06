@@ -1,3 +1,6 @@
 <%= turbo_stream.replace dom_id(@current_item) do %>
-  <%= render partial: 'line_items/line_item', locals: { line_item: @current_item, cart: @cart, current_item: @current_item } %>
+  <%= render partial: 'line_items/line_item', locals: { line_item: @current_item, cart: @cart, current_item: @current_item, show_buttons: true } %>
+<% end %>
+<%= turbo_stream.replace "cart-total" do %>
+  <%= render partial: 'carts/cart_total', locals: { cart: @cart } %>
 <% end %>
