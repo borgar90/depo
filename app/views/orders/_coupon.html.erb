@@ -1,0 +1,8 @@
+<!-- _coupon.html.erb -->
+<fieldset data-payment-target="additionalFields" data-id="<%= PaymentType.find_by(name: 'Coupon').id %>" data-type="Coupon">
+  <!-- Fields specific to coupon payments -->
+  <div class="my-5">
+    <%= form.label :coupon_code %>
+    <%= form.text_field :coupon_code, class: "input-field" %>
+  </div>
+</fieldset>

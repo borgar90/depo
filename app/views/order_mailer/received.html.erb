@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          color: #333;
+          line-height: 1.6;
+          margin: 0;
+          padding: 0;
+          background-color: #f4f4f4;
+      }
+      .container {
+          width: 80%;
+          margin: 0 auto;
+          background: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      h1, h3 {
+          color: #007BFF;
+      }
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 20px 0;
+      }
+      table th, table td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: left;
+      }
+      table th {
+          background-color: #007BFF;
+          color: #fff;
+      }
+      .footer {
+          text-align: center;
+          font-size: 0.9em;
+          color: #777;
+          margin-top: 20px;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Thank You for Your Order!</h1>
+  <p>Hello <%= @order.name %>,</p>
+  <p>We’re excited to let you know that we’ve received your recent order. Below are the details:</p>
+
+  <table>
+    <tr>
+      <th>Qty</th>
+      <th>Description</th>
+      <th>Total</th>
+    </tr>
+    <%= render @order.line_items, locals: { line_item_email: true } %>
+  </table>
+
+  <p>If you have any questions or need further assistance, feel free to reach out to our support team.</p>
+  <p>Thank you for shopping with us!</p>
+  <p>Best regards,<br>The Borgar F. Stensruds Book store Team</p>
+
+  <div class="footer">
+    <p>Borgar F. Stensruds Book store | Skien, Norway | +47 999 11 999</p>
+    <p>If you no longer wish to receive these emails, you can <a href="[unsubscribe_link]" style="color: #007BFF;">unsubscribe here</a>.</p>
+  </div>
+</div>
+</body>
+</html>

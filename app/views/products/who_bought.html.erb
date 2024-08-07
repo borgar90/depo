@@ -1,0 +1,28 @@
+<!-- app/views/products/who_bought.html.erb -->
+
+<table>
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Customer Name</th>
+      <th>Quantity</th>
+      <th>Total Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @product.line_items.each do |line_item| %>
+      <% if line_item.order.present? %>
+        <tr>
+          <td><%= line_item.order.id %></td>
+          <td><%= line_item.order.name %></td>
+          <td><%= line_item.quantity %></td>
+          <td><%= number_to_currency(line_item.quantity * line_item.product.price) %></td>
+        </tr>
+      <% else %>
+        <tr>
+          <td colspan="4">Line Item without Order</td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,8 @@
+<!-- _cash.html.erb -->
+<fieldset data-payment-target="additionalFields" data-id="<%= PaymentType.find_by(name: 'Cash').id %>" data-type="Cash">
+  <!-- Fields specific to cash payments -->
+  <div class="my-5">
+    <%= form.label :cash_amount %>
+    <%= form.number_field :cash_amount, class: "input-field" %>
+  </div>
+</fieldset>
