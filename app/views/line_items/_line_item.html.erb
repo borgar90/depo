@@ -1,6 +1,5 @@
 <tr id="<%= dom_id(line_item) %>" class="<%= 'line-item-highlight' if defined?(show_buttons) && show_buttons && line_item == current_item %>">
-  <td class="text-right"><%= line_item.quantity %></td>
-  <td>&times;</td>
+  <td class="text-right"><%= line_item.quantity %> &times;</td>
   <td class="pr-2"><%= line_item.product.title %></td>
   <td class="text-right font-bold"><%= number_to_currency(line_item.total_price) %></td>
   <% if defined?(show_buttons) && show_buttons %>
