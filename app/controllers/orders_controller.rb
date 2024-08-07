@@ -1,3 +1,4 @@
+require 'pago'
 class OrdersController < ApplicationController
   include CurrentCart
   before_action :set_cart, only: %i[ new create ]
@@ -18,40 +19,23 @@ class OrdersController < ApplicationController
     @order.add_line_items_from_cart(@cart)
 
     respond_to do |format|
-
-    if @order.save
-      payment_type = PaymentType.find_by(id: params[:order][:payment_type_id])
-      @payment = Payment.new(
-        payment_type: payment_type,
-        order: @order,
-        data: payment_params
-      )
-
-      if @payment.save
+      if @order.save
+        payment_data = payment_params
+        Rails.logger.debug("Payment data: #{payment_data}")
+        ChargeOrderJob.perform_later(@order, payment_data)
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
-        OrderMailer.received(@order).deliver_later
-        format.html { redirect_to store_index_url, notice:
-          'Thank you for your order.' }
-        format.json { render :show, status: :created,
-                             location: @order }
+        format.html { redirect_to store_index_url, notice: 'Thank you for your order.' }
+        format.json { render :show, status: :created, location: @order }
       else
-        @order.destroy  # Clean up in case payment fails
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @order.errors,
-                             status: :unprocessable_entity }
+        format.json { render json: @order.errors, status: :unprocessable_entity }
       end
-    else
-      format.html { render :new, status: :unprocessable_entity }
-      format.json { render json: @order.errors,
-                           status: :unprocessable_entity }
-    end
     end
   end
 
 
-
-private
+  private
 
 def ensure_cart_isnt_empty
   if @cart.line_items.empty?
@@ -64,21 +48,25 @@ end
   end
 
   def payment_params
+    Rails.logger.debug "Payment params: #{params[:order][:payment_type_id]}"
     case params[:order][:payment_type_id].to_i
-    when 1 # Credit card
-      params.require(:order).permit(:credit_card_number, :expiration_date)
-    when 2 # Check
-      params.require(:order).permit(:routing_number, :account_number)
-    when 3 # Purchase order
-      params.require(:order).permit(:po_number)
-    when 4 # Cash
+    when 1 # Cash
       params.require(:order).permit(:cash_amount)
-    when 5 # Coupon
+    when 2 # Coupon
       params.require(:order).permit(:coupon_code)
+    when 3 # Check
+      params.require(:order).permit(:routing_number, :account_number)
+    when 4 # Credit card
+      params.require(:order).permit(:credit_card_number, :expiration_date)
+    when 5 # Purchase order
+      params.require(:order).permit(:po_number)
     else
       {}
     end
   end
+
+
+
   end
 
 
