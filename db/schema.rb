@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_08_07_094406) do
+ActiveRecord::Schema[7.0].define(version: 2024_08_07_144617) do
   create_table "carts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -65,6 +65,22 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_07_094406) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "profiles", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "address"
+    t.string "phone"
+    t.text "shipping_info"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "return_orders", force: :cascade do |t|
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "password_digest"
@@ -78,4 +94,5 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_07_094406) do
   add_foreign_key "orders", "payment_types"
   add_foreign_key "payments", "orders"
   add_foreign_key "payments", "payment_types"
+  add_foreign_key "profiles", "users"
 end

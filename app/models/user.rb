@@ -1,6 +1,10 @@
 class User < ApplicationRecord
   has_secure_password
   after_destroy :ensure_an_admin_remains
+  has_one :profile, dependent: :destroy
+  has_many :orders, dependent: :destroy
+  has_many :return_orders, dependent: :destroy
+
   class Error < StandardError
   end
 

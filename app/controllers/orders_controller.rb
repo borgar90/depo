@@ -15,6 +15,10 @@ class OrdersController < ApplicationController
   end
 
 
+  def show_my_orders
+    @orders = Order.where(email: session[:user_email])
+  end
+
   def create
     @order = Order.new(order_params)
     @order.add_line_items_from_cart(@cart)

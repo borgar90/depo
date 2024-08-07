@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'return_order/show'
+  get 'return_order/edit'
+  get 'return_order/update'
+  get 'profiles/show'
+  get 'profiles/edit'
+  get 'profiles/update'
   get 'admin' => 'admin#index'
   controller :sessions do
     get 'login' => :new
@@ -10,7 +16,10 @@ Rails.application.routes.draw do
   get 'sessions/destroy'
 
   resources :users
+  resources :profiles, only: [:show, :edit, :update]
+
   resources :orders
+  resources :return_order, only: [:index, :show]
   resources :line_items
   resources :carts do
     member do
@@ -24,6 +33,7 @@ Rails.application.routes.draw do
       get :who_bought
     end
   end
+
   scope '(:locale)' do
     resources :orders
     resources :line_items

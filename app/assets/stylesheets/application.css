@@ -47,3 +47,29 @@
   font-weight: 500; /* font-medium */
   cursor: pointer; /* cursor-pointer */
 }
+
+.register_btn {
+    border-radius: 0.5rem; /* rounded-lg */
+    padding-top: 0.75rem; /* py-3 */
+    padding-bottom: 0.75rem; /* py-3 */
+    padding-left: 1.25rem; /* px-5 */
+    padding-right: 1.25rem; /* px-5 */
+    background-color: #bbf7d0; /* bg-green-200 */
+    color: #000000; /* text-black */
+    display: inline-block; /* inline-block */
+    font-weight: 500; /* font-medium */
+    cursor: pointer; /* cursor-pointer */
+}
+
+.login_btn {
+    border-radius: 0.5rem; /* rounded-lg */
+    padding-top: 0.75rem; /* py-3 */
+    padding-bottom: 0.75rem; /* py-3 */
+    padding-left: 1.25rem; /* px-5 */
+    padding-right: 1.25rem; /* px-5 */
+    background-color: white; /* bg-green-200 */
+    color: #000000; /* text-black */
+    display: inline-block; /* inline-block */
+    font-weight: 500; /* font-medium */
+    cursor: pointer; /* cursor-pointer */
+}

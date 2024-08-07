@@ -1,0 +1,7 @@
+<h1>Profile</h1>
+<p><strong>Name:</strong> <%= current_user.name %></p>
+<p><strong>Email:</strong> <%= current_user.email %></p>
+<p><strong>Address:</strong> <%= @profile.address %></p>
+<p><strong>Phone:</strong> <%= @profile.phone %></p>
+<p><strong>Shipping Info:</strong> <%= @profile.shipping_info %></p>
+<%= link_to 'Edit Profile', edit_profile_path %>
