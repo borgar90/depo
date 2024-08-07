@@ -18,11 +18,17 @@ Rails.application.routes.draw do
       patch 'decrease_quantity'
     end
   end
-  root 'store#index', as: 'store_index'
+
   resources :products do
     member do
       get :who_bought
     end
+  end
+  scope '(:locale)' do
+    resources :orders
+    resources :line_items
+    resources :carts
+    root 'store#index', as: 'store_index', via: :all
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
